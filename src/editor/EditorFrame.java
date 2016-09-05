@@ -5,6 +5,7 @@
  */
 package editor;
 
+import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -42,6 +43,7 @@ public class EditorFrame extends javax.swing.JFrame {
         statusField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
+        printButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -84,6 +86,13 @@ public class EditorFrame extends javax.swing.JFrame {
         textArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(textArea);
 
+        printButton.setText("Print");
+        printButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printButtonActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
 
@@ -109,6 +118,8 @@ public class EditorFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(quitButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(printButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(statusField)))
                 .addContainerGap())
         );
@@ -120,7 +131,8 @@ public class EditorFrame extends javax.swing.JFrame {
                     .addComponent(saveButton)
                     .addComponent(loadButton)
                     .addComponent(quitButton)
-                    .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(printButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
                 .addContainerGap())
@@ -131,6 +143,7 @@ public class EditorFrame extends javax.swing.JFrame {
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         textArea.setText("");
+        statusField.setText("New file");
     }//GEN-LAST:event_newButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
@@ -145,6 +158,7 @@ public class EditorFrame extends javax.swing.JFrame {
                 PrintWriter fout = new PrintWriter(chooser.getSelectedFile());
                 fout.print(textArea.getText()); 
                 fout.close();
+                statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath()); 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(EditorFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -162,11 +176,29 @@ public class EditorFrame extends javax.swing.JFrame {
                        buffer += fin.nextLine() + "\n";
                    }
                    textArea.setText(buffer);
+                   //close input buffer
+                   fin.close();
+                   statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
                } catch (FileNotFoundException ex) {
                    JOptionPane.showMessageDialog(this, "File not Found!!!");
                }
            }
     }//GEN-LAST:event_loadButtonActionPerformed
+
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+        try {
+            boolean complete = textArea.print();
+            if (complete) {
+                JOptionPane.showMessageDialog(null, "Done printing","Information",JOptionPane.INFORMATION_MESSAGE);
+                
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Printing!", "Printer",JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (PrinterException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_printButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,6 +242,7 @@ public class EditorFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
+    private javax.swing.JButton printButton;
     private javax.swing.JButton quitButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextField statusField;

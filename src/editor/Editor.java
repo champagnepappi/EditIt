@@ -5,6 +5,8 @@
  */
 package editor;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author kevyne
@@ -15,7 +17,12 @@ public class Editor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        //create new instance of EditorFrame
+        EditorFrame frame= new EditorFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        
     }
     
 }

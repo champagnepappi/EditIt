@@ -53,6 +53,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="quitButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="printButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="statusField" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -69,6 +71,7 @@
                   <Component id="loadButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="quitButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="statusField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="printButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="271" max="32767" attributes="0"/>
@@ -132,5 +135,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="printButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Print"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
