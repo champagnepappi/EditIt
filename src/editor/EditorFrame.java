@@ -5,6 +5,10 @@
  */
 package editor;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /**
@@ -128,6 +132,16 @@ public class EditorFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
+        int chooserValue = chooser.showSaveDialog(this);
+        if (chooserValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                PrintWriter fout = new PrintWriter(chooser.getSelectedFile());
+                fout.print(textArea.getText()); 
+                fout.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(EditorFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
