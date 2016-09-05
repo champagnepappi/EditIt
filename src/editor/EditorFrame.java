@@ -7,9 +7,11 @@ package editor;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -61,6 +63,11 @@ public class EditorFrame extends javax.swing.JFrame {
         });
 
         loadButton.setText("Load");
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadButtonActionPerformed(evt);
+            }
+        });
 
         quitButton.setText("Quit");
         quitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -143,6 +150,23 @@ public class EditorFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
+           JFileChooser chooser = new JFileChooser();
+           int chooserValue = chooser.showOpenDialog(this);
+           if (chooserValue == JFileChooser.APPROVE_OPTION) {
+               try {
+                   Scanner fin = new Scanner(chooser.getSelectedFile());
+                   String buffer = "";
+                   while (fin.hasNext()) {
+                       buffer += fin.nextLine() + "\n";
+                   }
+                   textArea.setText(buffer);
+               } catch (FileNotFoundException ex) {
+                   JOptionPane.showMessageDialog(this, "File not Found!!!");
+               }
+           }
+    }//GEN-LAST:event_loadButtonActionPerformed
 
     /**
      * @param args the command line arguments
