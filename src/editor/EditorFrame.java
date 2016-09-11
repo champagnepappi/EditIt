@@ -5,9 +5,20 @@
  */
 package editor;
 
+import java.awt.Color;
+import java.awt.FileDialog;
+import java.awt.datatransfer.Clipboard;
+import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,12 +30,42 @@ import javax.swing.JOptionPane;
  * @author kevyne
  */
 public class EditorFrame extends javax.swing.JFrame {
+    
+    String programName = "EditIt";
+    String filename = "";
+    String holdText;
+    String fn;
+    String dir;
+    boolean textChanged = false;
+    String fileName;
+    Clipboard clip = getToolkit().getSystemClipboard();
+    
 
     /**
      * Creates new form EditorFrame
      */
     public EditorFrame() {
         initComponents();
+    }
+    
+    public void checkFile() {
+        BufferedReader read;
+        StringBuffer sb = new StringBuffer();
+        try {
+            read = new BufferedReader(new FileReader(filename));
+            String line;
+            while ((line = read.readLine()) != null) {
+                sb.append(line + "\n");
+                
+            }
+            textArea.setText(sb.toString());
+            read.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException ioe) {
+            
+        }
+        
     }
 
     /**
@@ -36,6 +77,8 @@ public class EditorFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dialogColor = new javax.swing.JDialog();
+        colorChooser = new javax.swing.JColorChooser();
         newButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         loadButton = new javax.swing.JButton();
@@ -46,9 +89,36 @@ public class EditorFrame extends javax.swing.JFrame {
         printButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        newMenu = new javax.swing.JMenuItem();
+        openMenu = new javax.swing.JMenuItem();
+        saveMenu = new javax.swing.JMenuItem();
+        saveasMenu = new javax.swing.JMenuItem();
+        exitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        colorMenu = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        javax.swing.GroupLayout dialogColorLayout = new javax.swing.GroupLayout(dialogColor.getContentPane());
+        dialogColor.getContentPane().setLayout(dialogColorLayout);
+        dialogColorLayout.setHorizontalGroup(
+            dialogColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogColorLayout.createSequentialGroup()
+                .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 17, Short.MAX_VALUE))
+        );
+        dialogColorLayout.setVerticalGroup(
+            dialogColorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogColorLayout.createSequentialGroup()
+                .addComponent(colorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 35, Short.MAX_VALUE))
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("EditIt");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         newButton.setText("New");
         newButton.addActionListener(new java.awt.event.ActionListener() {
@@ -94,9 +164,64 @@ public class EditorFrame extends javax.swing.JFrame {
         });
 
         jMenu1.setText("File");
+
+        newMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newMenu.setText("New");
+        newMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(newMenu);
+
+        openMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        openMenu.setText("Open");
+        openMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(openMenu);
+
+        saveMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        saveMenu.setText("Save");
+        saveMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(saveMenu);
+
+        saveasMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        saveasMenu.setText("Save As");
+        saveasMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveasMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(saveasMenu);
+
+        exitMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        exitMenu.setText("Exit");
+        exitMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(exitMenu);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        colorMenu.setText("Textcolor");
+        colorMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                colorMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(colorMenu);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -108,7 +233,6 @@ public class EditorFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(newButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -120,7 +244,8 @@ public class EditorFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(printButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusField)))
+                        .addComponent(statusField))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -134,8 +259,7 @@ public class EditorFrame extends javax.swing.JFrame {
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(printButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE))
         );
 
         pack();
@@ -200,6 +324,133 @@ public class EditorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_printButtonActionPerformed
 
+    private void colorMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorMenuActionPerformed
+        Color c = colorChooser.showDialog(null, "Color Dialog", textArea.getForeground());
+               textArea.setForeground(c);
+    }//GEN-LAST:event_colorMenuActionPerformed
+
+    private void saveMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuActionPerformed
+        // TODO add your handling code here:
+        if(filename.equals(""))
+            saveAs();
+        else
+            save(filename);
+    }//GEN-LAST:event_saveMenuActionPerformed
+
+    private void saveasMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveasMenuActionPerformed
+        saveAs();
+    }//GEN-LAST:event_saveasMenuActionPerformed
+
+    private void newMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuActionPerformed
+        // TODO add your handling code here:
+        newFile();
+        statusField.setText("New file");
+    }//GEN-LAST:event_newMenuActionPerformed
+
+    private void openMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuActionPerformed
+        if(textArea.getText().length() < 1) {
+            FileDialog fd = new FileDialog(this, "Choose File",FileDialog.LOAD);
+            fd.show();
+            if (fd.getFile() != null) {
+                fileName = fd.getDirectory() + fd.getFile();
+                setTitle(fileName);
+                checkFile();
+            }
+            textArea.requestFocus();
+        }
+        else if(!textChanged) {
+            FileDialog fd = new FileDialog(this, "Choose File",FileDialog.LOAD);
+            fd.show();
+            if (fd.getFile() != null) {
+                fileName = fd.getDirectory() + fd.getFile();
+                setTitle(fileName);
+                checkFile();
+            }
+            textArea.requestFocus();
+        }
+        else {
+            int confirm = JOptionPane.showConfirmDialog(null,"Do you want to save before exiting the program","save modifications", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (confirm == JOptionPane.YES_OPTION)
+            {
+                if("".equals(filename)) {
+                    saveAs();
+                }
+                else {
+                    save(filename);
+                }
+                FileDialog fd = new FileDialog(this, "Choose File", FileDialog.LOAD);
+                fd.show();
+                if (fd.getFile() != null ) {
+                    fileName = fd.getDirectory() + fd.getFile();
+                    setTitle(fileName);
+                    checkFile();
+                }
+                textArea.requestFocus();
+            }
+            else if(confirm == JOptionPane.NO_OPTION) {
+                FileDialog fd = new FileDialog(this, "Choose File", FileDialog.LOAD);
+                fd.show();
+                if (fd.getFile() != null) {
+                    fileName = fd.getDirectory() + fd.getFile();
+                    setTitle(fileName);
+                    checkFile();
+                }
+                textArea.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_openMenuActionPerformed
+
+    private void exitMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuActionPerformed
+        if ("".equals(textArea.getText())) {
+            System.exit(0);
+        }
+        else if (!textChanged) {
+            System.exit(0);
+        }
+        else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to save before exiting the program");
+            if (confirm == JOptionPane.YES_OPTION) {
+                if(filename.equals(""))
+                    saveAs();
+                else
+                    save(filename);
+            }
+            if(confirm == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+        }
+    }//GEN-LAST:event_exitMenuActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if("".equals(textArea.getText())) {
+            System.exit(0);
+        }
+        else if(!textChanged) {
+            System.exit(0);
+        }
+        else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to exit the program without saving");
+            if (confirm == JOptionPane.YES_OPTION) {
+                if(filename.equals(""))
+                    saveAs();
+                else
+                    save(filename);
+                System.exit(0);
+            }
+            if (confirm == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void textAreaTextValueChanged(java.awt.event.TextEvent evt) {
+        if (TextEvent.TEXT_VALUE_CHANGED != 0) {
+            if(!textChanged)
+                setTitle("* "+getTitle());
+            textChanged = true;
+            saveMenu.setEnabled(true);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -236,16 +487,108 @@ public class EditorFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JColorChooser colorChooser;
+    private javax.swing.JMenuItem colorMenu;
+    private javax.swing.JDialog dialogColor;
+    private javax.swing.JMenuItem exitMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
+    private javax.swing.JMenuItem newMenu;
+    private javax.swing.JMenuItem openMenu;
     private javax.swing.JButton printButton;
     private javax.swing.JButton quitButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JMenuItem saveMenu;
+    private javax.swing.JMenuItem saveasMenu;
     private javax.swing.JTextField statusField;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
+
+    private void saveAs() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FileDialog fd = new FileDialog(EditorFrame.this, "Save", FileDialog.SAVE);
+        fd.show();
+        if (fd.getFile() != null) {
+            fn = fd.getFile();
+            dir = fd.getDirectory();
+            filename = dir + fn + ".txt";
+            
+            setTitle(filename);
+            try {
+                DataOutputStream d = new DataOutputStream(new FileOutputStream(filename));
+                holdText = textArea.getText();
+                BufferedReader br = new BufferedReader(new StringReader(holdText));
+                while ((holdText = br.readLine()) != null)
+                {
+                    d.writeBytes(holdText + "\r\n");
+                    d.close();
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("File not found");
+            }
+            textArea.requestFocus();
+            save(filename);
+        } 
+        
+        
+    }
+
+    private void save(String filename) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setTitle(programName+" "+filename);
+        try {
+            FileWriter out;
+            out = new FileWriter(fn);
+            out.write(textArea.getText());
+            out.close();
+            
+        }
+        catch (Exception err) {
+            System.out.println("Error: " + err);
+        }
+        textChanged = false;
+        saveMenu.setEnabled(false);
+    }
+
+    private void newFile() {
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        if(textArea.getText().length() < 1) {
+            setTitle("Untitled-"+programName);
+            textArea.setText("");
+            textChanged = false;
+        }
+        else if(!textChanged) {
+            setTitle("Untitled-"+programName);
+            textArea.setText("");
+            textChanged = false;
+        }
+        else {
+            int confirm = JOptionPane.showConfirmDialog(null, textArea);
+            if (confirm == JOptionPane.YES_OPTION)
+            {
+                if("".equals(filename)) {
+                    saveAs();
+                }
+                else {
+                    save(filename);
+                }
+                setTitle(programName);
+                filename = "";
+                textArea.setText("");
+                textChanged = false;
+            }
+            else if(confirm == JOptionPane.NO_OPTION) {
+                setTitle(programName);
+                textArea.setText("");
+                textChanged = false;
+            }
+        }
+    }
+    
 }
