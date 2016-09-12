@@ -11,6 +11,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,6 +41,8 @@ public class EditorFrame extends javax.swing.JFrame {
     boolean textChanged = false;
     String fileName;
     Clipboard clip = getToolkit().getSystemClipboard();
+    
+    private String currentFile = null;
     
 
     /**
@@ -640,9 +643,9 @@ return false;
         
     }
 
-    private void save(String filename) {
+    private boolean save(String filename) {
         setTitle(programName+" "+filename);
-        try {
+        /*try {
             FileWriter out;
             out = new FileWriter(fn);
             out.write(textArea.getText());
@@ -653,7 +656,23 @@ return false;
             System.out.println("Error: " + err);
         }
         textChanged = false;
+        saveMenu.setEnabled(false);*/
+        try {
+        BufferedWriter writer = new BufferedWriter( new
+        FileWriter(filename) );
+        writer.write( textArea.getText() );
+        writer.close();
+        currentFile = filename;
+        return true;
+        } catch( IOException e ) {
+        JOptionPane.showMessageDialog( this, "Error: " +
+        e.getMessage() );
+        }
         saveMenu.setEnabled(false);
+        return false;
+ 
+        
+        
     }
 
     private void newFile() {
