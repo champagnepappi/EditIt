@@ -12,6 +12,7 @@ import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -458,6 +459,11 @@ public class EditorFrame extends javax.swing.JFrame {
 try {
     BufferedReader reader = new BufferedReader( new
     FileReader(filename) );
+    File file = new File(filename);
+    if (!file.exists())
+        throw new IOException(filename + "does not exist");
+    if (file.length()> Integer.MAX_VALUE)
+        throw new IOException(filename + "Oops.. Too large!");
     String bigString = "";
     String littleString = "";
     String eol = System.getProperty( "line.separator" );do {
@@ -523,18 +529,15 @@ return false;
     }//GEN-LAST:event_formWindowClosing
 
     private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
-        // TODO add your handling code here:
         textArea.copy();
         
     }//GEN-LAST:event_copyMenuActionPerformed
 
     private void pasteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
-        // TODO add your handling code here:
         textArea.paste();
     }//GEN-LAST:event_pasteMenuActionPerformed
 
     private void cutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuActionPerformed
-        // TODO add your handling code here:
         textArea.cut();
     }//GEN-LAST:event_cutMenuActionPerformed
 
@@ -638,7 +641,6 @@ return false;
     }
 
     private void save(String filename) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         setTitle(programName+" "+filename);
         try {
             FileWriter out;
@@ -654,7 +656,7 @@ return false;
         saveMenu.setEnabled(false);
     }
 
-    /*private void newFile() {
+    private void newFile() {
         //throw new UnsupportedOperationException("Not supported yet."); 
         if(textArea.getText().length() < 1) {
             setTitle("Untitled-"+programName);
@@ -687,6 +689,6 @@ return false;
                 textChanged = false;
             }
         }
-    }*/
+    }
     
 }
