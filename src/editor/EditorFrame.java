@@ -453,7 +453,8 @@ public class EditorFrame extends javax.swing.JFrame {
         chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
         if( chooser.showOpenDialog(this) ==
         JFileChooser.APPROVE_OPTION ) {
-        openFile( chooser.getSelectedFile().toString() );
+        if(openFile( chooser.getSelectedFile().toString() ))
+            currentFile = chooser.getSelectedFile().toString();
         statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
         }
 
