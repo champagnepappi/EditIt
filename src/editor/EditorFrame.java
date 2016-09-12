@@ -96,6 +96,9 @@ public class EditorFrame extends javax.swing.JFrame {
         exitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         colorMenu = new javax.swing.JMenuItem();
+        copyMenu = new javax.swing.JMenuItem();
+        pasteMenu = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         javax.swing.GroupLayout dialogColorLayout = new javax.swing.GroupLayout(dialogColor.getContentPane());
         dialogColor.getContentPane().setLayout(dialogColorLayout);
@@ -201,7 +204,7 @@ public class EditorFrame extends javax.swing.JFrame {
         });
         jMenu1.add(saveasMenu);
 
-        exitMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        exitMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         exitMenu.setText("Exit");
         exitMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -221,6 +224,33 @@ public class EditorFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(colorMenu);
+
+        copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        copyMenu.setText("Copy");
+        copyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(copyMenu);
+
+        pasteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        pasteMenu.setText("Paste");
+        pasteMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(pasteMenu);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Cut");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
 
@@ -443,6 +473,21 @@ public class EditorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
+    private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
+        // TODO add your handling code here:
+        textArea.copy();
+    }//GEN-LAST:event_copyMenuActionPerformed
+
+    private void pasteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
+        // TODO add your handling code here:
+        textArea.paste();
+    }//GEN-LAST:event_pasteMenuActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        textArea.cut();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     private void textAreaTextValueChanged(java.awt.event.TextEvent evt) {
         if (TextEvent.TEXT_VALUE_CHANGED != 0) {
             if(!textChanged)
@@ -489,16 +534,19 @@ public class EditorFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JColorChooser colorChooser;
     private javax.swing.JMenuItem colorMenu;
+    private javax.swing.JMenuItem copyMenu;
     private javax.swing.JDialog dialogColor;
     private javax.swing.JMenuItem exitMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
     private javax.swing.JMenuItem newMenu;
     private javax.swing.JMenuItem openMenu;
+    private javax.swing.JMenuItem pasteMenu;
     private javax.swing.JButton printButton;
     private javax.swing.JButton quitButton;
     private javax.swing.JButton saveButton;
