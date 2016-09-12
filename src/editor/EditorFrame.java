@@ -395,6 +395,7 @@ public class EditorFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         newFile();
         statusField.setText("New file");
+        currentFile = null;
     }//GEN-LAST:event_newMenuActionPerformed
 
     private void openMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuActionPerformed
