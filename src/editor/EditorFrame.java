@@ -381,10 +381,10 @@ public class EditorFrame extends javax.swing.JFrame {
 
     private void saveMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuActionPerformed
         // TODO add your handling code here:
-        if(filename.equals(""))
-            saveAs();
+        if(currentFile != null)
+            save(currentFile);
         else
-            save(filename);
+            saveAs();
     }//GEN-LAST:event_saveMenuActionPerformed
 
     private void saveasMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveasMenuActionPerformed
