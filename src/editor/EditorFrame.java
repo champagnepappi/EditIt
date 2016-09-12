@@ -47,6 +47,22 @@ public class EditorFrame extends javax.swing.JFrame {
     public EditorFrame() {
         initComponents();
     }
+    /*public void initialize() {
+        textArea.addCaretListener( new CaretListener() {
+        @Override
+        public void caretUpdate(CaretEvent e) {
+        boolean isSelected = false;
+        int dot = e.getDot();
+        int mark = e.getMark();
+        if( dot != mark )
+        isSelected = true;
+        });
+        }
+        boolean isSelected = false;
+        copyMenu.setEnabled(isSelected);
+        cutMenu.setEnabled(isSelected);
+    }*/
+    
     
     public void checkFile() {
         BufferedReader read;
@@ -98,7 +114,7 @@ public class EditorFrame extends javax.swing.JFrame {
         colorMenu = new javax.swing.JMenuItem();
         copyMenu = new javax.swing.JMenuItem();
         pasteMenu = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        cutMenu = new javax.swing.JMenuItem();
 
         javax.swing.GroupLayout dialogColorLayout = new javax.swing.GroupLayout(dialogColor.getContentPane());
         dialogColor.getContentPane().setLayout(dialogColorLayout);
@@ -243,14 +259,14 @@ public class EditorFrame extends javax.swing.JFrame {
         });
         jMenu2.add(pasteMenu);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Cut");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        cutMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        cutMenu.setText("Cut");
+        cutMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                cutMenuActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(cutMenu);
 
         jMenuBar1.add(jMenu2);
 
@@ -378,7 +394,7 @@ public class EditorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newMenuActionPerformed
 
     private void openMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuActionPerformed
-        if(textArea.getText().length() < 1) {
+        /*if(textArea.getText().length() < 1) {
             FileDialog fd = new FileDialog(this, "Choose File",FileDialog.LOAD);
             fd.show();
             if (fd.getFile() != null) {
@@ -427,9 +443,42 @@ public class EditorFrame extends javax.swing.JFrame {
                 }
                 textArea.requestFocus();
             }
+        } */
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+        if( chooser.showOpenDialog(this) ==
+        JFileChooser.APPROVE_OPTION ) {
+        openFile( chooser.getSelectedFile().toString() );
+        statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
         }
+
     }//GEN-LAST:event_openMenuActionPerformed
 
+    private boolean openFile(String filename) {
+try {
+    BufferedReader reader = new BufferedReader( new
+    FileReader(filename) );
+    String bigString = "";
+    String littleString = "";
+    String eol = System.getProperty( "line.separator" );do {
+    littleString = reader.readLine();
+    if( littleString != null ) {
+    littleString += eol;
+    bigString += littleString;
+    }
+    }
+    while( littleString != null );
+    reader.close();
+    textArea.setText( bigString );
+    //statusField.setStatus( "Loaded " + filename );
+    return true;
+    } catch( IOException e ) {
+    JOptionPane.showMessageDialog( this, "Error: " +
+    e.getMessage() );
+}
+//statusField.setStatus( "Failed to read " + filename );
+return false;
+}
     private void exitMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuActionPerformed
         if ("".equals(textArea.getText())) {
             System.exit(0);
@@ -476,6 +525,7 @@ public class EditorFrame extends javax.swing.JFrame {
     private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
         // TODO add your handling code here:
         textArea.copy();
+        
     }//GEN-LAST:event_copyMenuActionPerformed
 
     private void pasteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteMenuActionPerformed
@@ -483,10 +533,10 @@ public class EditorFrame extends javax.swing.JFrame {
         textArea.paste();
     }//GEN-LAST:event_pasteMenuActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void cutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuActionPerformed
         // TODO add your handling code here:
         textArea.cut();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_cutMenuActionPerformed
 
     private void textAreaTextValueChanged(java.awt.event.TextEvent evt) {
         if (TextEvent.TEXT_VALUE_CHANGED != 0) {
@@ -535,12 +585,12 @@ public class EditorFrame extends javax.swing.JFrame {
     private javax.swing.JColorChooser colorChooser;
     private javax.swing.JMenuItem colorMenu;
     private javax.swing.JMenuItem copyMenu;
+    private javax.swing.JMenuItem cutMenu;
     private javax.swing.JDialog dialogColor;
     private javax.swing.JMenuItem exitMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
@@ -604,7 +654,7 @@ public class EditorFrame extends javax.swing.JFrame {
         saveMenu.setEnabled(false);
     }
 
-    private void newFile() {
+    /*private void newFile() {
         //throw new UnsupportedOperationException("Not supported yet."); 
         if(textArea.getText().length() < 1) {
             setTitle("Untitled-"+programName);
@@ -637,6 +687,6 @@ public class EditorFrame extends javax.swing.JFrame {
                 textChanged = false;
             }
         }
-    }
+    }*/
     
 }
