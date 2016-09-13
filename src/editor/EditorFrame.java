@@ -116,6 +116,8 @@ public class EditorFrame extends javax.swing.JFrame {
         exitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         colorMenu = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         copyMenu = new javax.swing.JMenuItem();
         pasteMenu = new javax.swing.JMenuItem();
         cutMenu = new javax.swing.JMenuItem();
@@ -244,6 +246,12 @@ public class EditorFrame extends javax.swing.JFrame {
             }
         });
         jMenu2.add(colorMenu);
+
+        jMenuItem1.setText("Undo");
+        jMenu2.add(jMenuItem1);
+
+        jMenuItem2.setText("Redo");
+        jMenu2.add(jMenuItem2);
 
         copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         copyMenu.setText("Copy");
@@ -599,6 +607,8 @@ return false;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
