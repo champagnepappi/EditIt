@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.undo.UndoManager;
 
 /**
  *
@@ -43,6 +44,7 @@ public class EditorFrame extends javax.swing.JFrame {
     Clipboard clip = getToolkit().getSystemClipboard();
     
     private String currentFile = null;
+    protected UndoManager undoManager = new UndoManager();
     
 
     /**
@@ -116,8 +118,8 @@ public class EditorFrame extends javax.swing.JFrame {
         exitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         colorMenu = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        undoMenu = new javax.swing.JMenuItem();
+        redoMenu = new javax.swing.JMenuItem();
         copyMenu = new javax.swing.JMenuItem();
         pasteMenu = new javax.swing.JMenuItem();
         cutMenu = new javax.swing.JMenuItem();
@@ -247,11 +249,13 @@ public class EditorFrame extends javax.swing.JFrame {
         });
         jMenu2.add(colorMenu);
 
-        jMenuItem1.setText("Undo");
-        jMenu2.add(jMenuItem1);
+        undoMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        undoMenu.setText("Undo");
+        jMenu2.add(undoMenu);
 
-        jMenuItem2.setText("Redo");
-        jMenu2.add(jMenuItem2);
+        redoMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        redoMenu.setText("Redo");
+        jMenu2.add(redoMenu);
 
         copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         copyMenu.setText("Copy");
@@ -607,8 +611,6 @@ return false;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton newButton;
@@ -617,11 +619,13 @@ return false;
     private javax.swing.JMenuItem pasteMenu;
     private javax.swing.JButton printButton;
     private javax.swing.JButton quitButton;
+    private javax.swing.JMenuItem redoMenu;
     private javax.swing.JButton saveButton;
     private javax.swing.JMenuItem saveMenu;
     private javax.swing.JMenuItem saveasMenu;
     private javax.swing.JTextField statusField;
     private javax.swing.JTextArea textArea;
+    private javax.swing.JMenuItem undoMenu;
     // End of variables declaration//GEN-END:variables
 
     private void saveAs() {
