@@ -8,6 +8,8 @@ package editor;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.datatransfer.Clipboard;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
@@ -24,8 +26,13 @@ import java.io.StringReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
 
 /**
@@ -45,6 +52,9 @@ public class EditorFrame extends javax.swing.JFrame {
     
     private String currentFile = null;
     protected UndoManager undoManager = new UndoManager();
+    private UndoAction undoAction = new UndoAction();
+    private RedoAction redoAction = new RedoAction();
+    
     
 
     /**
@@ -52,6 +62,9 @@ public class EditorFrame extends javax.swing.JFrame {
      */
     public EditorFrame() {
         initComponents();
+        textArea.getDocument().addUndoableEditListener(new UndoListener());
+        editMenu.add((Action) undoAction);
+        editMenu.add((Action) redoAction);
     }
     /*public void initialize() {
         textArea.addCaretListener( new CaretListener() {
@@ -116,10 +129,9 @@ public class EditorFrame extends javax.swing.JFrame {
         saveMenu = new javax.swing.JMenuItem();
         saveasMenu = new javax.swing.JMenuItem();
         exitMenu = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        editMenu = new javax.swing.JMenu();
         colorMenu = new javax.swing.JMenuItem();
-        undoMenu = new javax.swing.JMenuItem();
-        redoMenu = new javax.swing.JMenuItem();
+        fontMenu = new javax.swing.JMenuItem();
         copyMenu = new javax.swing.JMenuItem();
         pasteMenu = new javax.swing.JMenuItem();
         cutMenu = new javax.swing.JMenuItem();
@@ -239,7 +251,7 @@ public class EditorFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        editMenu.setText("Edit");
 
         colorMenu.setText("Textcolor");
         colorMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -247,15 +259,15 @@ public class EditorFrame extends javax.swing.JFrame {
                 colorMenuActionPerformed(evt);
             }
         });
-        jMenu2.add(colorMenu);
+        editMenu.add(colorMenu);
 
-        undoMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
-        undoMenu.setText("Undo");
-        jMenu2.add(undoMenu);
-
-        redoMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
-        redoMenu.setText("Redo");
-        jMenu2.add(redoMenu);
+        fontMenu.setText("Set Font");
+        fontMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontMenuActionPerformed(evt);
+            }
+        });
+        editMenu.add(fontMenu);
 
         copyMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         copyMenu.setText("Copy");
@@ -264,7 +276,7 @@ public class EditorFrame extends javax.swing.JFrame {
                 copyMenuActionPerformed(evt);
             }
         });
-        jMenu2.add(copyMenu);
+        editMenu.add(copyMenu);
 
         pasteMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
         pasteMenu.setText("Paste");
@@ -273,7 +285,7 @@ public class EditorFrame extends javax.swing.JFrame {
                 pasteMenuActionPerformed(evt);
             }
         });
-        jMenu2.add(pasteMenu);
+        editMenu.add(pasteMenu);
 
         cutMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
         cutMenu.setText("Cut");
@@ -282,9 +294,9 @@ public class EditorFrame extends javax.swing.JFrame {
                 cutMenuActionPerformed(evt);
             }
         });
-        jMenu2.add(cutMenu);
+        editMenu.add(cutMenu);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -558,6 +570,12 @@ return false;
         textArea.cut();
     }//GEN-LAST:event_cutMenuActionPerformed
 
+    private void fontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontMenuActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_fontMenuActionPerformed
+
+   
     private void textAreaTextValueChanged(java.awt.event.TextEvent evt) {
         if (TextEvent.TEXT_VALUE_CHANGED != 0) {
             if(!textChanged)
@@ -607,9 +625,10 @@ return false;
     private javax.swing.JMenuItem copyMenu;
     private javax.swing.JMenuItem cutMenu;
     private javax.swing.JDialog dialogColor;
+    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenu;
+    private javax.swing.JMenuItem fontMenu;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadButton;
@@ -619,13 +638,11 @@ return false;
     private javax.swing.JMenuItem pasteMenu;
     private javax.swing.JButton printButton;
     private javax.swing.JButton quitButton;
-    private javax.swing.JMenuItem redoMenu;
     private javax.swing.JButton saveButton;
     private javax.swing.JMenuItem saveMenu;
     private javax.swing.JMenuItem saveasMenu;
     private javax.swing.JTextField statusField;
     private javax.swing.JTextArea textArea;
-    private javax.swing.JMenuItem undoMenu;
     // End of variables declaration//GEN-END:variables
 
     private void saveAs() {
@@ -723,6 +740,35 @@ return false;
                 textArea.setText("");
                 textChanged = false;
             }
+        }
+    }
+
+     class UndoAction extends AbstractAction {
+
+        public UndoAction() {
+            this.putValue(Action.NAME, undoManager.getUndoPresentationName());
+            this.setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+    private static class RedoAction {
+
+        public RedoAction() {
+        }
+    }
+
+     class UndoListener implements UndoableEditListener {
+
+        public void UndoableEditHappened(UndoableEditEvent e) {
+            undoManager.addEdit(e.getEdit());
+            undoAction.update();
+            redoAction.update();
+            
         }
     }
     
