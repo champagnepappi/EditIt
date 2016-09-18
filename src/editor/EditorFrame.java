@@ -759,6 +759,10 @@ return false;
                 redoAction.update();
             }
         }
+        public void update() {
+          this.putValue(Action.NAME, undoManager.getUndoPresentationName());
+          this.setEnabled(undoManager.canUndo());
+    }
     }
 
     private static class RedoAction {
