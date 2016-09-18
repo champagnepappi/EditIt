@@ -765,19 +765,36 @@ return false;
     }
     }
 
-    private static class RedoAction {
+     class RedoAction extends AbstractAction{
 
         public RedoAction() {
+            this.putValue(Action.NAME, undoManager.getRedoPresentationName());
+            this.setEnabled(false);
         }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //To change body of generated methods, choose Tools | Templates.
+            if (this.isEnabled()) {
+                undoManager.undo();
+                undoAction.update();
+                redoAction.update();
+            }
+            
+        }
+        public void update() {
+       this.putValue(Action.NAME, undoManager.getRedoPresentationName());
+       this.setEnabled(undoManager.canRedo());
+    }
     }
 
      class UndoListener implements UndoableEditListener {
 
-        public void UndoableEditHappened(UndoableEditEvent e) {
-            undoManager.addEdit(e.getEdit());
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+          undoManager.addEdit(e.getEdit());
             undoAction.update();
             redoAction.update();
-            
         }
     }
     
