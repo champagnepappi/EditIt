@@ -568,25 +568,29 @@ return false;
     }//GEN-LAST:event_exitMenuActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if("".equals(textArea.getText())) {
-            System.exit(0);
-        }
-        else if(!textChanged) {
-            System.exit(0);
-        }
-        else {
-            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to exit the program without saving","Wanna quit",JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
+       
+       if (  textArea.getText().trim().equals(""))
+       {
+         System.exit(0);
+       }
+     else
+      {
+      String message = "Do you want to save changes before exiting the program?";
+      String title = "Really Quit?";
+      // display the JOptionPane showConfirmDialog
+      int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+      if (reply == JOptionPane.YES_OPTION) {
                 if(filename.equals(""))
                     saveAs();
                 else
                     save(filename);
                 System.exit(0);
             }
-            if (confirm == JOptionPane.NO_OPTION) {
+            if (reply == JOptionPane.NO_OPTION) {
                 System.exit(0);
             }
-        }
+     }
+        
     }//GEN-LAST:event_formWindowClosing
 
     private void copyMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyMenuActionPerformed
