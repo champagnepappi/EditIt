@@ -8,10 +8,12 @@ package editor;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Font;
+import java.awt.RenderingHints.Key;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
@@ -57,8 +59,8 @@ public class EditorFrame extends javax.swing.JFrame {
     
     private String currentFile = null;
     protected UndoManager undoManager = new UndoManager();
-    private UndoAction undoAction = new UndoAction();
-    private RedoAction redoAction = new RedoAction();
+    private final UndoAction undoAction = new UndoAction();
+    private final RedoAction redoAction = new RedoAction();
     JFontChooser fontChooser = new JFontChooser();
    
 
@@ -69,10 +71,16 @@ public class EditorFrame extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         textArea.getDocument().addUndoableEditListener(new UndoListener());
-        editMenu.add((Action) undoAction);
-        editMenu.add((Action) redoAction);
-        undoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-        redoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+        JMenuItem undoItem = editMenu.add((Action) undoAction);
+        KeyStroke ctrlZ;
+        ctrlZ = KeyStroke.getKeyStroke(KeyEvent.VK_Z,InputEvent.CTRL_DOWN_MASK);
+        undoItem.setAccelerator(ctrlZ);
+        
+        JMenuItem redoItem = editMenu.add((Action) redoAction);
+        KeyStroke ctrlY;
+        ctrlY = KeyStroke.getKeyStroke(KeyEvent.VK_Y,InputEvent.CTRL_MASK);
+        redoItem.setAccelerator(ctrlY);
+        
                 
     }
     /*public void initialize() {
@@ -816,7 +824,6 @@ return false;
                 undoManager.undo();
                 undoAction.update();
                 redoAction.update();
-                undoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
             }
         }
         public void update() {
@@ -836,7 +843,7 @@ return false;
         public void actionPerformed(ActionEvent e) {
             //To change body of generated methods, choose Tools | Templates.
             if (this.isEnabled()) {
-                undoManager.undo();
+                undoManager.redo();
                 undoAction.update();
                 redoAction.update();
             }
