@@ -7,9 +7,11 @@ package editor;
 
 import java.awt.Color;
 import java.awt.FileDialog;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 import java.awt.print.PrinterException;
 import java.io.BufferedReader;
@@ -30,6 +32,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.CannotRedoException;
@@ -55,7 +58,6 @@ public class EditorFrame extends javax.swing.JFrame {
     private UndoAction undoAction = new UndoAction();
     private RedoAction redoAction = new RedoAction();
     
-    
 
     /**
      * Creates new form EditorFrame
@@ -65,6 +67,9 @@ public class EditorFrame extends javax.swing.JFrame {
         textArea.getDocument().addUndoableEditListener(new UndoListener());
         editMenu.add((Action) undoAction);
         editMenu.add((Action) redoAction);
+        undoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+        redoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+                
     }
     /*public void initialize() {
         textArea.addCaretListener( new CaretListener() {
@@ -345,7 +350,29 @@ public class EditorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
-        System.exit(0);
+        //System.exit(0);
+        // if the output area is empty just quit, otherwise prompt before leaving
+      if (  textArea.getText().trim().equals(""))
+       {
+         System.exit(0);
+       }
+  else
+  {
+      String message = "Do you want to save changes before exiting the program?";
+      String title = "Really Quit?";
+      // display the JOptionPane showConfirmDialog
+      int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+      if (reply == JOptionPane.YES_OPTION) {
+                if(filename.equals(""))
+                    saveAs();
+                else
+                    save(filename);
+                System.exit(0);
+            }
+            if (reply == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+  }
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -480,6 +507,7 @@ public class EditorFrame extends javax.swing.JFrame {
         if(openFile( chooser.getSelectedFile().toString() ))
             currentFile = chooser.getSelectedFile().toString();
         statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
+        
         }
 
     }//GEN-LAST:event_openMenuActionPerformed
@@ -522,7 +550,7 @@ return false;
             System.exit(0);
         }
         else {
-            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to save before exiting the program");
+            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to save before exiting the program","Exit",JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 if(filename.equals(""))
                     saveAs();
@@ -543,7 +571,7 @@ return false;
             System.exit(0);
         }
         else {
-            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to exit the program without saving");
+            int confirm = JOptionPane.showConfirmDialog(this, "Do you want to exit the program without saving","Wanna quit",JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 if(filename.equals(""))
                     saveAs();
@@ -757,6 +785,7 @@ return false;
                 undoManager.undo();
                 undoAction.update();
                 redoAction.update();
+                undoAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
             }
         }
         public void update() {
@@ -786,6 +815,8 @@ return false;
        this.putValue(Action.NAME, undoManager.getRedoPresentationName());
        this.setEnabled(undoManager.canRedo());
     }
+
+      
     }
 
      class UndoListener implements UndoableEditListener {
