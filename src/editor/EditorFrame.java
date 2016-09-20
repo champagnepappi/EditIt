@@ -67,6 +67,7 @@ public class EditorFrame extends javax.swing.JFrame {
      */
     public EditorFrame() {
         initComponents();
+        this.setLocationRelativeTo(null);
         textArea.getDocument().addUndoableEditListener(new UndoListener());
         editMenu.add((Action) undoAction);
         editMenu.add((Action) redoAction);
