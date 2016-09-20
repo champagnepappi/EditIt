@@ -7,6 +7,7 @@ package editor;
 
 import java.awt.Color;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
@@ -57,7 +59,8 @@ public class EditorFrame extends javax.swing.JFrame {
     protected UndoManager undoManager = new UndoManager();
     private UndoAction undoAction = new UndoAction();
     private RedoAction redoAction = new RedoAction();
-    
+    JFontChooser fontChooser = new JFontChooser();
+   
 
     /**
      * Creates new form EditorFrame
@@ -345,6 +348,7 @@ public class EditorFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
+        newFile();
         textArea.setText("");
         statusField.setText("New file");
     }//GEN-LAST:event_newButtonActionPerformed
@@ -506,6 +510,8 @@ public class EditorFrame extends javax.swing.JFrame {
         JFileChooser.APPROVE_OPTION ) {
         if(openFile( chooser.getSelectedFile().toString() ))
             currentFile = chooser.getSelectedFile().toString();
+            fileName = chooser.getSelectedFile().getAbsolutePath();
+            setTitle(programName+" "+fileName);
         statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
         
         }
@@ -608,6 +614,16 @@ return false;
 
     private void fontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontMenuActionPerformed
         // TODO add your handling code here:
+        
+       int result;
+        result = fontChooser.showDialog(getParent());
+    if (result == JFontChooser.OK_OPTION)
+   {
+       Font font = fontChooser.getSelectedFont(); 
+      System.out.println("Selected Font : " + font); 
+      textArea.setFont(font);
+    }
+        
         
     }//GEN-LAST:event_fontMenuActionPerformed
 
@@ -757,8 +773,14 @@ return false;
             textChanged = false;
         }
         else {
-            int confirm = JOptionPane.showConfirmDialog(null, textArea);
-            if (confirm == JOptionPane.YES_OPTION)
+             String message = "Do you want to proceed without saving changes?";
+      String title = "Save changes?";
+      // display the JOptionPane showConfirmDialog
+      int confirm = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+      if (confirm == JOptionPane.YES_OPTION) 
+            
+            //int confirm = JOptionPane.showConfirmDialog(null, textArea);
+            //if (confirm == JOptionPane.YES_OPTION)
             {
                 if("".equals(filename)) {
                     saveAs();
