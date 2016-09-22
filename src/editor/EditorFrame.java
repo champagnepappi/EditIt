@@ -58,6 +58,7 @@ public class EditorFrame extends javax.swing.JFrame {
     Clipboard clip = getToolkit().getSystemClipboard();
     
     private String currentFile = null;
+    //undoManager provides a way to undo and redo appropriate edit
     protected UndoManager undoManager = new UndoManager();
     private final UndoAction undoAction = new UndoAction();
     private final RedoAction redoAction = new RedoAction();
@@ -101,6 +102,7 @@ public class EditorFrame extends javax.swing.JFrame {
     
     
     public void checkFile() {
+        //read text from character input stream
         BufferedReader read;
         StringBuffer sb = new StringBuffer();
         try {
@@ -417,6 +419,8 @@ public class EditorFrame extends javax.swing.JFrame {
                    //close input buffer
                    fin.close();
                    statusField.setText("Loaded " + chooser.getSelectedFile().getAbsolutePath());
+                   fileName = chooser.getSelectedFile().getAbsolutePath();
+                   setTitle(programName+" "+fileName);
                } catch (FileNotFoundException ex) {
                    JOptionPane.showMessageDialog(this, "File not Found!!!");
                }
@@ -431,7 +435,7 @@ public class EditorFrame extends javax.swing.JFrame {
                 
             }
             else {
-                JOptionPane.showMessageDialog(null, "Printing!", "Printer",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error Printing!", "Printer",JOptionPane.ERROR_MESSAGE);
             }
         } catch (PrinterException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -583,7 +587,8 @@ return false;
     }//GEN-LAST:event_exitMenuActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-       
+       //the trim() eliminates trailing and leading spaces i.e checks unicode value before
+       //and after string
        if (  textArea.getText().trim().equals(""))
        {
          System.exit(0);
@@ -593,15 +598,15 @@ return false;
       String message = "Do you want to save changes before exiting the program?";
       String title = "Really Quit?";
       // display the JOptionPane showConfirmDialog
-      int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
-      if (reply == JOptionPane.YES_OPTION) {
+      int confirm = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+      if (confirm == JOptionPane.YES_OPTION) {
                 if(filename.equals(""))
                     saveAs();
                 else
                     save(filename);
                 System.exit(0);
             }
-            if (reply == JOptionPane.NO_OPTION) {
+            if (confirm == JOptionPane.NO_OPTION) {
                 System.exit(0);
             }
      }
@@ -624,6 +629,7 @@ return false;
     private void fontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontMenuActionPerformed
         // TODO add your handling code here:
         
+        //the getParent() here returns reference to the parent of this component
        int result;
         result = fontChooser.showDialog(getParent());
     if (result == JFontChooser.OK_OPTION)
@@ -730,6 +736,7 @@ return false;
             {
                 System.out.println("File not found");
             }
+            //get Focus on the textArea
             textArea.requestFocus();
             save(filename);
         } 
